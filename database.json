@@ -1,0 +1,60 @@
+{
+    "produk": [
+    {
+      "nama_produk": "Vans",
+      "deskripsi": "Vans Authentic",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/vans.png",
+      "id": 1
+    },
+    {
+      "nama_produk": "Vans",
+      "deskripsi": "Vans Authentic 2",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/vans1.png",
+      "id": 2
+    },
+    {
+      "nama_produk": "Adidas",
+      "deskripsi": "Adidas Authentic 2",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/ads.png",
+      "id": 3
+    },
+    {
+      "nama_produk": "Adidas",
+      "deskripsi": "Adidas Authentic 2",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/adidas1.png",
+      "id": 4
+    },
+    {
+      "nama_produk": "Adidas",
+      "deskripsi": "Adidas Authentic 2",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/ads2.png",
+      "id": 5
+    },
+    {
+      "nama_produk": "New Balance",
+      "deskripsi": "New Balance Authentic",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/nb.png",
+      "id": 5
+    },
+    {
+      "nama_produk": "New Balance",
+      "deskripsi": "New Balance Authentic",
+      "jumlah": 24,
+      "harga": 28000,
+      "gambar": "img/nb1.png",
+      "id": 5
+    }
+    ]
+}
