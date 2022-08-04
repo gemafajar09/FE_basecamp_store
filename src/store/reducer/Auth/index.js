@@ -5,24 +5,27 @@ import {
 } from "../../action/login"
 
 const token = localStorage.getItem("token")
+const id = localStorage.getItem("id")
 const inisialState = {
     token: token ? token : "",
-    dataUser : []
+    id: id ? id : "",
+    dataUser : {}
 }
 
 const AuthReducer = (state = inisialState, action) => {
     switch (action.type) {
         case LOGIN:
-            localStorage.setItem("token", action.data)
             return {
                 ...state,
-                token: action.data,
+                token: action.token,
+                id: action.id,
             }
-        case LOGOUT :
-            return {
+            case LOGOUT :
+                return {
                 ...state,
                 token: "",
-                dataUser: []
+                id: "",
+                dataUser : {}
             }
             case GET_USER :
             return {
@@ -32,7 +35,6 @@ const AuthReducer = (state = inisialState, action) => {
         default:
             return state
         }
-        
 }
 
 export default AuthReducer

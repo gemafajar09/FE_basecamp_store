@@ -1,15 +1,15 @@
-import { Fragment, memo, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Navbar from './Navbar'
-import { login } from "../../store/action/login"
+import { login, register } from "../../store/action/login"
 
 import React from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
 
-const Template = ({ children, title, hideModal, modal }) => {
-  const dispatch = useDispatch()
+const Template = ({ children, title, hideModal, modal, logins, regis, daftar }) => {
   let theme = localStorage.getItem('theme');
 
+  const [nama, setNama] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
@@ -21,8 +21,13 @@ const Template = ({ children, title, hideModal, modal }) => {
   }, [title, theme])
 
   const handelLogin = () => {
-    dispatch(login(username, password))
+    logins(username, password)
   }
+
+  const handelDaftar = () => {
+    daftar(nama, username, password)
+  }
+
   return (
     <Fragment>
       <div className="mx-auto bg-grey-400 dark:bg-black-400">
@@ -45,17 +50,37 @@ const Template = ({ children, title, hideModal, modal }) => {
           {/* Modal content */}
           <div className="relative dark:bg-white rounded-lg shadow bg-gray-700">
             {/* Modal header */}
-            <div className="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600">
-              <h3 className="text-xl font-semibold dark:text-gray-900 text-white">
-                Form Login
-              </h3>
+            <div className="flex justify-between items-start p-1 rounded-t border-b  dark:border-gray-600">
+              <div className="flex">
+                <div onClick={regis} className={`w-28 h-11 text-center py-2 ${modal.view ? 'bg-white dark:bg-gray-700 dark:text-white' : 'text-white bg-teal-500 dark:bg-purple-500'}   rounded-l-md cursor-pointer`}>
+                  Login
+                </div>
+                <div onClick={regis} className={`w-28 h-11 text-center py-2 ${modal.view ? 'bg-teal-500 dark:bg-purple-500 text-white' : 'bg-white dark:bg-gray-700 dark:text-white'} rounded-r-md cursor-pointer`}>
+                  Register
+                </div>
+              </div>
               <button type="button" onClick={hideModal} className="text-gray-400 bg-transparent dark:hover:bg-gray-200 dark:hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-600 hover:text-white" data-modal-toggle="defaultModal">
                 <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
                 <span className="sr-only">Close modal</span>
               </button>
             </div>
             {/* Modal body */}
-            <div className="p-6 space-y-1">
+            <div className={`${modal.view ? 'hidden' : 'block'} p-6 space-y-1`} >
+              <div className="py-1 w-full">
+                <label htmlFor="#" className=" text-white dark:text-gray-500 text-md">Username</label>
+                <input type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} className="w-full dark:bg-gray-500 dark:text-white bg-white rounded-md h-10 pl-5 pr-5" />
+              </div>
+              <div className="py-1 w-full">
+                <label htmlFor="#" className=" text-white text-md dark:text-gray-500">Username</label>
+                <input type="password" placeholder='**********' onChange={(e) => setPassword(e.target.value)} className="w-full dark:bg-gray-500 dark:text-white bg-white rounded-md h-10 pl-5 pr-5" />
+              </div>
+            </div>
+
+            <div className={`${modal.view ? 'block' : 'hidden'} p-6 space-y-1`} >
+              <div className="py-1 w-full">
+                <label htmlFor="#" className=" text-white dark:text-gray-500 text-md">Nama</label>
+                <input type="text" placeholder='Nama' onChange={(e) => setNama(e.target.value)} className="w-full dark:bg-gray-500 dark:text-white bg-white rounded-md h-10 pl-5 pr-5" />
+              </div>
               <div className="py-1 w-full">
                 <label htmlFor="#" className=" text-white dark:text-gray-500 text-md">Username</label>
                 <input type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} className="w-full dark:bg-gray-500 dark:text-white bg-white rounded-md h-10 pl-5 pr-5" />
@@ -66,8 +91,11 @@ const Template = ({ children, title, hideModal, modal }) => {
               </div>
             </div>
             {/* Modal footer */}
-            <div className="justify-end flex p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
-              <button onClick={handelLogin} data-modal-toggle="defaultModal" type="button" className=" text-white bg-teal-600 hover:bg-teal-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-400 dark:focus:ring-blue-800">Login</button>
+            <div className={`justify-end flex p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600`}>
+              <button onClick={handelLogin} data-modal-toggle="defaultModal" type="button" className={`text-white bg-teal-600 hover:bg-teal-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-400 dark:focus:ring-blue-800 ${modal.view ? 'hidden' : 'block'}`}>Login</button>
+
+              <button onClick={handelDaftar} data-modal-toggle="defaultModal" type="button" className={`text-white bg-teal-600 hover:bg-teal-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-400 dark:focus:ring-blue-800 ${modal.view ? 'block' : 'hidden'}`}>Daftar</button>
+
               <button onClick={hideModal} data-modal-toggle="defaultModal" type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Close</button>
             </div>
           </div>
@@ -77,19 +105,18 @@ const Template = ({ children, title, hideModal, modal }) => {
   )
 }
 
-const mapToStateProps = (state) => {
-  return {
-    modal: state.ModalReducer
-  }
-}
+const mapToStateProps = state => ({
+  modal: state.ModalReducer
+})
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    hideModal: () => dispatch({ type: 'MODAL' }),
-    cobaLoading: () => dispatch({ type: 'GET_PRODUK', loading: false, data: [] })
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  hideModal: () => dispatch({ type: 'MODAL' }),
+  cobaLoading: () => dispatch({ type: 'GET_PRODUK', loading: false, data: [] }),
+  logins: (username, password) => dispatch(login(username, password)),
+  regis: () => dispatch({ type: 'MODAL_VIEW' }),
+  daftar: (nama, username, password) => dispatch(register(nama, username, password))
+})
 
 const withConnect = connect(mapToStateProps, mapDispatchToProps);
 
-export default compose(withConnect, memo)(Template)
+export default compose(withConnect)(Template)

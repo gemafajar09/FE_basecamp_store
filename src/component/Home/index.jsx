@@ -1,23 +1,10 @@
 import { compose } from 'redux'
-import { memo, useEffect } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { ParallaxProvider } from 'react-scroll-parallax'
-import { getProduk } from '../../store/action/produk'
-import { getUSer } from "../../store/action/login"
 import { Card, CardLoad } from '../card'
 import { Header } from "../Header"
 
-const tokenx = localStorage.getItem('token')
-const Home = ({ produk, cobaLoading, user }) => {
-
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getProduk())
-        if (tokenx) {
-            dispatch(getUSer())
-        }
-    }, [dispatch, cobaLoading])
+const Home = ({ produk }) => {
 
     return (
         <>
@@ -50,23 +37,14 @@ const Home = ({ produk, cobaLoading, user }) => {
                     }
                 </div>
             </div>
-
-
         </>
-
-
-
     )
 }
-const mapToStateProps = (state) => {
-    return {
-        modal: state.ModalReducer,
-        produk: state.ProdukReducer,
-        user: state.AuthReducer
-    }
-}
+const mapToStateProps = state => ({
+    modal: state.ModalReducer,
+    produk: state.ProdukReducer
+})
 
+const connectHome = connect(mapToStateProps, null);
 
-const withConnect = connect(mapToStateProps, null);
-
-export default compose(withConnect, memo)(Home)
+export default compose(connectHome)(Home)
