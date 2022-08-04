@@ -1,17 +1,16 @@
 import { useState, memo, useEffect } from 'react'
 import { Switch } from '@headlessui/react'
 import { compose } from 'redux'
-import { connect, useSelector } from 'react-redux'
-import { BsFillCartFill } from "react-icons/bs";
+import { connect } from 'react-redux'
+import { BsFillCartFill } from "react-icons/bs"
 
-const Navbar = ({ modeLight, modeDark, showModal, hideModal, getToken }) => {
+const Navbar = ({ modeLight, modeDark, showModal, hideModal, getToken, user, dataCart }) => {
     const [mobile, setMobile] = useState(false)
     const [enabled, setEnabled] = useState(false)
 
+    const total = dataCart.getCartResult ? dataCart.getCartResult?.length : 0
+
     let theme = localStorage.getItem('theme')
-
-    const token = useSelector(state => state.AuthReducer)
-
     useEffect(() => {
         if (theme === 'light') {
             setEnabled(false)
@@ -20,7 +19,6 @@ const Navbar = ({ modeLight, modeDark, showModal, hideModal, getToken }) => {
             setEnabled(true)
             modeDark()
         }
-
     }, [theme, modeLight, modeDark, showModal, hideModal, getToken])
 
     const themeChange = () => {
@@ -68,22 +66,20 @@ const Navbar = ({ modeLight, modeDark, showModal, hideModal, getToken }) => {
                         <a href="/" className="hover:text-pink-600 block px-4 py-2 text-white lg:py-5">Berita</a>
                     </div>
                     <div className="flex flex-col lg:flex-row">
-                        <button id="dropdownDefault" data-dropdown-toggle="dropdown" className={token.token ? 'lg:block hidden' : 'hidden'}>
+                        <button id="dropdownDefault" data-dropdown-toggle="dropdown" className={user.token ? 'lg:block hidden' : 'hidden'}>
                             <div className="w-12 h-12 rounded-full bg-gray-200 mt-2 mb-2">
                                 <img src="https://cdn-icons-png.flaticon.com/512/219/219983.png" className='w-12 h-12 rounded-full bg-gray-200 mt-2 mb-2' alt="" />
                             </div>
                         </button>
                         {/* dropdown */}
 
+                        <a href="#home" role={'button'} onClick={aksiModalTampil} className={user.token ? 'hidden' : 'hover:text-blue-300 block px-4 py-2 text-white lg:py-5'}>Sign In / Sign Up</a>
 
-                        <a href="/" className={token.token ? 'hidden' : 'hover:text-blue-300 block px-4 py-2 text-white lg:py-5'}>Daftar</a>
-                        <a href="#home" role={'button'} onClick={aksiModalTampil} className={token.token ? 'hidden' : 'hover:text-blue-300 block px-4 py-2 text-white lg:py-5'}>Login</a>
-
-                        <div className="block px-4 py-2 lg:py-5">
+                        <div className={user.token ? "block px-4 py-2 lg:py-5" : 'hidden'}>
                             <a href="/cart">
                                 <BsFillCartFill color={'white'} className="text-xl" />
                                 <div className="lg:block hidden absolute lg:top-2 top-10 dark:text-purple-400 ml-5 text-center rounded-full text-black bg-white w-5 h-5">
-                                    <p>1</p>
+                                    <p>{total}</p>
                                 </div>
                             </a>
                         </div>
@@ -108,14 +104,19 @@ const Navbar = ({ modeLight, modeDark, showModal, hideModal, getToken }) => {
     )
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        modeLight: () => dispatch({ type: 'LIGHT' }),
-        modeDark: () => dispatch({ type: 'DARK' }),
-        showModal: () => dispatch({ type: 'MODAL' })
-    }
-}
+const mapStateToProps = state => ({
+    user: state.AuthReducer,
+    dataCart: state.CartReducer,
+})
 
-const withConnect = connect(null, mapDispatchToProps);
 
-export default compose(withConnect, memo)(Navbar);
+
+const mapDispatchToProps = dispatch => ({
+    modeLight: () => dispatch({ type: 'LIGHT' }),
+    modeDark: () => dispatch({ type: 'DARK' }),
+    showModal: () => dispatch({ type: 'MODAL' })
+})
+
+const connectApp = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(connectApp, memo)(Navbar);

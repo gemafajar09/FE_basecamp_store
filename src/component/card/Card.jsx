@@ -1,11 +1,10 @@
-import { memo, useEffect } from 'react'
 import { compose } from 'redux';
 import { motion } from 'framer-motion';
 import { numberFormat } from "../../format/numberFormat"
+import { connect } from 'react-redux';
 
 const Card = ({ produk }) => {
-    useEffect(() => {
-    }, [produk])
+
     return (
         <>
             {
@@ -43,19 +42,21 @@ const Card = ({ produk }) => {
                                         </a>
                                     </div>
                                 </div>
-
-
                             </div>
                         </motion.div>
                     )
                 })
             }
-
         </>
-
-
-
     )
 }
 
-export default compose(memo)(Card)
+const mapToStateProps = (state) => {
+    return {
+        user: state.AuthReducer
+    }
+}
+
+const connectProduk = connect(mapToStateProps, null);
+
+export default compose(connectProduk)(Card)

@@ -4,8 +4,8 @@ import {
 } from '../../action/cart'
 
 const inisialState = {
-    cartResult: [],
-    getCartResult: [],
+    cartResult: false,
+    getCartResult: false,
 }
 
 const CartReducer = (state = inisialState, action) => {

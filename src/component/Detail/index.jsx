@@ -1,20 +1,15 @@
-import { memo, useEffect, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { compose } from 'redux'
 import moment from 'moment'
-import { getProduk } from "../../store/action/produk"
+import swal from 'sweetalert'
 import { AddCart } from "../../store/action/cart"
 import { numberFormat } from '../../format/numberFormat'
 
-const DetailProduk = ({ showDetail }) => {
-    const dispatch = useDispatch()
+const DetailProduk = ({ showDetail, addkeranjang, user }) => {
     const [jumlah, setJumlah] = useState(1)
     let id = useParams()
-
-    useEffect(() => {
-        dispatch(getProduk())
-    }, [dispatch])
 
     const dataResult = showDetail.dataResult.find((item) => item.id === Number(id.id))
 
@@ -34,7 +29,17 @@ const DetailProduk = ({ showDetail }) => {
     console.log(date);
 
     const handelAddCart = () => {
-        dispatch(AddCart(dataResult?.id, jumlah, date))
+        if (user?.id) {
+            const hasil = addkeranjang(dataResult?.id, jumlah, date, user.id)
+            console.log(hasil);
+        } else {
+            swal({
+                title: "Peringatan!",
+                text: "Silahkan Login Terlebih Dahulu!",
+                icon: "error",
+                button: "Ok",
+            });
+        }
     }
     return (
         dataResult === 'undifined' ?
@@ -143,12 +148,15 @@ const DetailProduk = ({ showDetail }) => {
     )
 }
 
-const mapToStateProps = (state) => {
-    return {
-        showDetail: state.ProdukReducer
-    }
-}
+const mapToStateProps = state => ({
+    showDetail: state.ProdukReducer,
+    user: state.AuthReducer
+})
 
-const withConnect = connect(mapToStateProps, null)
+const mapDispatchToProps = dispatch => ({
+    addkeranjang: (id_produk, jumlah, tanggal, id_user) => dispatch(AddCart(id_produk, jumlah, tanggal, id_user))
+})
 
-export default compose(withConnect, memo)(DetailProduk)
+const connectDetail = connect(mapToStateProps, mapDispatchToProps)
+
+export default compose(connectDetail)(DetailProduk)
